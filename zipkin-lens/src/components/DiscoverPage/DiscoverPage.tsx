@@ -33,9 +33,20 @@ const DiscoverPageImpl: React.FC<DiscoverPageImplProps> = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    loadAutocompleteKeys();
-    loadServices();
-  }, []);
+    const loadSequentially = async () => {
+      console.log(`Anfrage AutocompleteKeys gestartet um: ${Date.now()}ms`);
+      await loadAutocompleteKeys();
+      console.log(`Anfrage AutocompleteKeys beendet um: ${Date.now()}ms`);
+
+      console.log('Warte kurz, bevor der nächste Request startet...');
+
+      console.log(`Anfrage Services gestartet um: ${Date.now()}ms`);
+      await loadServices();
+      console.log(`Anfrage Services beendet um: ${Date.now()}ms`);
+    };
+
+    loadSequentially();
+  }, [loadAutocompleteKeys, loadServices]);
 
   if (!config.searchEnabled) {
     return (
