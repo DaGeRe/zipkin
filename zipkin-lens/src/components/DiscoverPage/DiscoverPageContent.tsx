@@ -448,7 +448,7 @@ const DiscoverPageContent: React.FC<DiscoverPageContentProps> = ({
   const [tempLookback, setTempLookback] = useState<Lookback>(
     initialLookback(lookback, defaultLookback),
   );
-  const [tempLimit, setTempLimit] = useState(limit || queryLimit);
+  const [tempLimit, setTempLimit] = useState(limit || 500);
 
   const lookbackDisplay = useMemo<string>(() => {
     switch (tempLookback.type) {
@@ -467,7 +467,7 @@ const DiscoverPageContent: React.FC<DiscoverPageContentProps> = ({
 
   const handleLimitChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setTempLimit(parseInt(event.target.value, 10));
+      setTempLimit(parseInt(event.target.value, 500));
     },
     [],
   );

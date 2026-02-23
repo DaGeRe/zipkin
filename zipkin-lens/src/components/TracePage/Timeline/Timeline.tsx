@@ -4,8 +4,6 @@
  */
 import { Box, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useRef } from 'react';
-import AutoSizer, { Size } from 'react-virtualized-auto-sizer';
-import { FixedSizeList as List, ListChildComponentProps } from 'react-window';
 import { useMeasure } from 'react-use';
 import { AdjustedSpan } from '../../../models/AdjustedTrace';
 import { MiniTimeline } from '../MiniTimeline';
@@ -85,33 +83,21 @@ export const Timeline = ({
     }
   }, [selectedSpan.spanId, spanRows]);
 
-  const rowRenderer = useCallback(
-    (props: ListChildComponentProps) => {
-      const spanRow = spanRows[props.index];
-
-      return (
-        <div style={props.style}>
-          <TimelineRow
-            {...spanRow}
-            setSelectedSpan={setSelectedSpan}
-            isSelected={selectedSpan.spanId === spanRow.spanId}
-            selectedMinTimestamp={selectedMinTimestamp}
-            selectedMaxTimestamp={selectedMaxTimestamp}
-            toggleOpenSpan={toggleOpenSpan}
-            rowHeight={rowHeight}
-          />
-        </div>
-      );
-    },
-    [
-      selectedMaxTimestamp,
-      selectedMinTimestamp,
-      selectedSpan.spanId,
-      setSelectedSpan,
-      spanRows,
-      toggleOpenSpan,
-    ],
-  );
+  const renderTimelineRows = () => {
+    return spanRows.map((spanRow) => (
+      <div key={spanRow.spanId}>
+        <TimelineRow
+          {...spanRow}
+          setSelectedSpan={setSelectedSpan}
+          isSelected={selectedSpan.spanId === spanRow.spanId}
+          selectedMinTimestamp={selectedMinTimestamp}
+          selectedMaxTimestamp={selectedMaxTimestamp}
+          toggleOpenSpan={toggleOpenSpan}
+          rowHeight={rowHeight}
+        />
+      </div>
+    ));
+  };
 
   return (
     <Box className={classes.root}>
@@ -149,21 +135,8 @@ export const Timeline = ({
           setClosedSpanIdMap={setClosedSpanIdMap}
         />
       </Box>
-      <Box flex="1 1">
-        <AutoSizer>
-          {(args: Size) => (
-            <List
-              ref={listRef}
-              width={args.width}
-              height={args.height}
-              itemSize={rowHeight}
-              itemCount={spanRows.length}
-              innerRef={listInnerRef}
-            >
-              {rowRenderer}
-            </List>
-          )}
-        </AutoSizer>
+      <Box flex="1 1" style={{ overflowY: 'auto', height: '100%' }}>
+        {renderTimelineRows()}
       </Box>
     </Box>
   );
