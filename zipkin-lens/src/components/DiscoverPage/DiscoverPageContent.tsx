@@ -588,7 +588,7 @@ const DiscoverPageContent: React.FC<DiscoverPageContentProps> = ({
               searchTraces={searchTraces}
             />
           </Box>
-          <SearchButton onClick={searchTraces}>
+          <SearchButton onClick={() => {searchTraces();}}>
             <Trans t={t}>Run Query</Trans>
           </SearchButton>
           <SettingsButton
@@ -693,13 +693,30 @@ const LookbackButton = styled(
   padding-bottom: 7.5px;
 `;
 
-const SearchButton = styled(Button).attrs({
-  variant: 'contained',
-  color: 'primary',
-  startIcon: <FontAwesomeIcon icon={faSync} />,
-})`
+const SearchButton = styled(Box)`
+  display: inline-flex;
+  tabIndex: 5;
+  align-items: center;
+  justify-content: center;
+  background-color: #3f51b5; 
+  color: white;
+  padding: 6px 16px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
   flex-shrink: 0;
-  color: ${({ theme }) => theme.palette.common.white};
+  text-transform: uppercase;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  user-select: none; /* Verhindert Textmarkierung beim Klicken */
+
+  &:hover {
+    background-color: #303f9f;
+  }
+
+  &:active {
+    background-color: #283593; /* Simuliert das "Eindrücken" */
+  }
 `;
 
 const SettingsButton = styled(
